@@ -1,0 +1,47 @@
+version: "3.8"
+
+services:
+  delivery-service:
+    build: ./delivery-service
+    image: delivery-service
+    depends_on:
+      - mysql
+    environment:
+      PORT: "3000"
+      MACHINE_PORT: "3000"
+      DB_USERNAME: "juanse"
+      DB_PASSWORD: "admin"
+      DB_DATABASE: "deliveryDB"
+      DB_HOST: "deliveryDB"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./delivery-service:/usr/src
+      - /usr/src/node_modules
+    container_name: "delivery-service"
+    command: npx nodemon --legacy-watch main.js
+
+  mysql:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=juanse
+      - MYSQL_PASSWORD=admin
+      - MYSQL_DATABASE=deliveryDB
+    container_name: deliveryDB
+    restart: always
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:4.7
+    restart: always
+    depends_on:
+      - mysql
+    ports:
+      - "8080:80"
+    environment:
+      - PMA_HOST=deliveryDB
+      - PMA_PORT= 3306
+    volumes:
+      - /sessions
+    container_name: adminDatabase
