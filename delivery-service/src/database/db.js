@@ -1,5 +1,5 @@
 import { Sequelize } from "sequelize";
-import setUpModels from "../models";
+import setUpModels from "../models/index.js";
 
 const sequelize = new Sequelize(
   process.env.DB_DATABASE,
@@ -12,5 +12,7 @@ const sequelize = new Sequelize(
 );
 
 setUpModels(sequelize);
+
+sequelize.sync();
 
 export default sequelize;

@@ -6,6 +6,7 @@ const userSchema = {
     allowNull: false,
     primaryKey: true,
     type: DataTypes.UUID,
+    defaultValue: Sequelize.UUIDV4,
   },
   email: {
     allowNull: false,
@@ -13,6 +14,15 @@ const userSchema = {
   },
   password: {
     allowNull: false,
+    type: DataTypes.STRING,
+  },
+  rol: {
+    allowNull: false,
+    type: DataTypes.ENUM("ADMIN", "SELLER", "USER"),
+    defaultValue: "USER",
+  },
+  address: {
+    allowNull: true,
     type: DataTypes.STRING,
   },
   createdAt: {
@@ -24,7 +34,16 @@ const userSchema = {
 };
 
 class User extends Model {
-  static associate() {}
+  static associate(models) {
+    this.hasMany(models.Product, {
+      as: "products",
+      foreignKey: "sellerId",
+    });
+    this.hasMany(models.Order, {
+      as: "orders",
+      foreignKey: "customerId",
+    });
+  }
   static config(sequelize) {
     return {
       sequelize,

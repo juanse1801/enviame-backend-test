@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import helmet from "helmet";
 import cors from "cors";
 import sequelize from "./src/database/db.js";
+import routesConfig from "./src/routes/index.js";
 dotenv.config();
 
 // INITIALIZE SERVER
@@ -27,6 +28,9 @@ app.use(
     ],
   })
 );
+
+//RUTAS
+routesConfig(app);
 
 // CONEXION A LA BASE DE DATOS
 sequelize

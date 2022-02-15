@@ -6,7 +6,7 @@ RUN ["apt-get", "-y", "install", "vim"]
 
 COPY ["package.json","package-lock.json", "/usr/delivery-service/src/"]
 
-WORKDIR /usr/delivery-service/src
+WORKDIR /usr/src
 
 RUN npm install
 
