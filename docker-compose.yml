@@ -47,3 +47,19 @@ services:
     volumes:
       - /sessions
     container_name: adminDatabase
+
+  delivery-service:
+    build: ./delivery-service
+    image: delivery-service
+    depends_on:
+      - mysql
+    environment:
+      PORT: "3000"
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./delivery-service/:/usr/src
+      - ./delivery-service/node_modules:/usr/src/node_modules
+    container_name: "delivery-service"
+    restart: always
+    command: npx nodemon --legacy-watch main.js
