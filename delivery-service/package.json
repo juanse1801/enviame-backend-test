@@ -2,27 +2,11 @@
   "name": "delivery-service",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
-  "main": "main.js",
+  "main": "index.js",
   "scripts": {
-    "start": "nodemon main.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "migrations:generate": "sequelize-cli migration:generate --name",
-    "migrations:run": "sequelize-cli db:migrate",
-    "migrations:revert": "sequelize-cli db:migrate:undo"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^16.0.0",
-    "express": "^4.17.2",
-    "helmet": "^5.0.2",
-    "morgan": "^1.10.0",
-    "mysql2": "^2.3.3",
-    "nodemon": "^2.0.15",
-    "sequelize": "^6.16.1",
-    "sequelize-cli": "^6.4.1"
-  }
+  "license": "ISC"
 }

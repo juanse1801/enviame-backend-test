@@ -4,6 +4,7 @@ import helmet from "helmet";
 import cors from "cors";
 import sequelize from "./src/database/db.js";
 import routesConfig from "./src/routes/index.js";
+import morgan from "morgan";
 dotenv.config();
 
 // INITIALIZE SERVER
@@ -14,6 +15,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(helmet());
+app.use(morgan("dev"));
 app.use(
   cors({
     origin: "*",
@@ -33,7 +35,7 @@ app.use(
 routesConfig(app);
 
 // CONEXION A LA BASE DE DATOS
-sequelize
+await sequelize
   .authenticate()
   .then(() => {
     console.log("CONECTADO A LA BASE DE DATOS");

@@ -8,6 +8,7 @@ const productSchema = {
     allowNull: false,
     primaryKey: true,
     type: DataTypes.UUID,
+    defaultValue: Sequelize.UUIDV4,
   },
   name: {
     allowNull: false,
@@ -22,8 +23,7 @@ const productSchema = {
     allowNull: false,
     type: DataTypes.INTEGER,
   },
-  sellerId: {
-    field: "seller_id",
+  seller_id: {
     allowNull: false,
     type: DataTypes.UUID,
     references: {
@@ -41,7 +41,7 @@ const productSchema = {
 
 class Product extends Model {
   static associate(models) {
-    this.belongsTo(models.User, { as: "sellerUser" });
+    this.belongsTo(models.User, { as: "sellerUser", foreignKey: "seller_id" });
   }
   static config(sequelize) {
     return {

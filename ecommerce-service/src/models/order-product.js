@@ -8,9 +8,9 @@ const orderProductShema = {
     allowNull: false,
     primaryKey: true,
     type: DataTypes.UUID,
+    defaultValue: Sequelize.UUIDV4,
   },
-  orderId: {
-    field: "order_id",
+  order_id: {
     allowNull: false,
     type: DataTypes.UUID,
     references: {
@@ -18,8 +18,7 @@ const orderProductShema = {
       key: "id",
     },
   },
-  productId: {
-    field: "product_id",
+  product_id: {
     allowNull: false,
     type: DataTypes.UUID,
     references: {

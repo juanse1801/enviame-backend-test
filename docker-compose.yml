@@ -1,23 +1,26 @@
 version: "3.8"
 
 services:
-  delivery-service:
-    build: ./delivery-service
-    image: delivery-service
+  ecommerce-service:
+    build: ./ecommerce-service
+    image: ecommerce-service
     depends_on:
       - mysql
     environment:
       PORT: "3000"
       DB_USERNAME: "juanse"
       DB_PASSWORD: "admin"
-      DB_DATABASE: "deliveryDB"
-      DB_HOST: "deliveryDB"
+      DB_DATABASE: "ecommerceDB"
+      DB_HOST: "ecommerceDB"
+      CSR_NUMBER: "10"
+      SECRETKEY: "85GplflN9lICjxnuDXOM"
     ports:
       - "3000:3000"
     volumes:
-      - ./delivery-service/:/usr/src
-      - ./delivery-service/node_modules:/usr/src/node_modules
-    container_name: "delivery-service"
+      - ./ecommerce-service/:/usr/src
+      - ./ecommerce-service/node_modules:/usr/src/node_modules
+    container_name: "ecommerce-service"
+    restart: always
     command: npx nodemon --legacy-watch main.js
 
   mysql:
@@ -27,8 +30,8 @@ services:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_USER=juanse
       - MYSQL_PASSWORD=admin
-      - MYSQL_DATABASE=deliveryDB
-    container_name: deliveryDB
+      - MYSQL_DATABASE=ecommerceDB
+    container_name: ecommerceDB
     restart: always
 
   phpmyadmin:
@@ -39,7 +42,7 @@ services:
     ports:
       - "8080:80"
     environment:
-      - PMA_HOST=deliveryDB
+      - PMA_HOST=ecommerceDB
       - PMA_PORT= 3306
     volumes:
       - /sessions

@@ -1,4 +1,5 @@
 import { Model, DataTypes, Sequelize } from "sequelize";
+import bcrypt from "bcryptjs";
 const USER_TABLE = "users";
 
 const userSchema = {
@@ -7,6 +8,10 @@ const userSchema = {
     primaryKey: true,
     type: DataTypes.UUID,
     defaultValue: Sequelize.UUIDV4,
+  },
+  name: {
+    allowNull: false,
+    type: DataTypes.STRING,
   },
   email: {
     allowNull: false,
@@ -37,11 +42,15 @@ class User extends Model {
   static associate(models) {
     this.hasMany(models.Product, {
       as: "products",
-      foreignKey: "sellerId",
+      foreignKey: "seller_id",
     });
     this.hasMany(models.Order, {
       as: "orders",
-      foreignKey: "customerId",
+      foreignKey: "customer_id",
+    });
+    this.hasMany(models.Order, {
+      as: "buyorders",
+      foreignKey: "seller_id",
     });
   }
   static config(sequelize) {
@@ -51,6 +60,12 @@ class User extends Model {
       modelName: "User",
       timestamps: false,
     };
+  }
+
+  async validatePassword(password) {
+    const user = this;
+    const compare = await bcrypt.compare(password, user.password);
+    return compare;
   }
 }
 

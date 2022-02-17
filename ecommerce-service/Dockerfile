@@ -4,13 +4,13 @@ RUN ["apt-get", "update"]
 RUN ["apt-get", "-y", "install", "vim"]
 
 
-COPY ["package.json","package-lock.json", "/usr/delivery-service/src/"]
+COPY ["package.json","package-lock.json", "/usr/ecommerce-service/src/"]
 
 WORKDIR /usr/src
 
 RUN npm install
 
-COPY [".","/usr/delivery-service/src"]
+COPY [".","/usr/ecommerce-service/src"]
 
 EXPOSE 3000
 

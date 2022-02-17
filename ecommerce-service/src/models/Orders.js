@@ -11,10 +11,24 @@ const orderSchema = {
   },
   order_status: {
     allowNull: false,
-    type: DataTypes.STRING,
+    type: DataTypes.ENUM(
+      "CREATED",
+      "CONFIRMED",
+      "DISPATCHED",
+      "DELIVERED",
+      "CANCELED"
+    ),
+    defaultValue: "CREATED",
   },
-  customerId: {
-    field: "customer_id",
+  customer_id: {
+    allowNull: false,
+    type: DataTypes.UUID,
+    references: {
+      model: USER_TABLE,
+      key: "id",
+    },
+  },
+  seller_id: {
     allowNull: false,
     type: DataTypes.UUID,
     references: {
@@ -32,12 +46,19 @@ const orderSchema = {
 
 class Order extends Model {
   static associate(models) {
-    this.belongsTo(models.User, { as: "customerUser" });
+    this.belongsTo(models.User, {
+      as: "customerUser",
+      foreignKey: "customer_id",
+    });
+    this.belongsTo(models.User, {
+      as: "sellerUser",
+      foreignKey: "seller_id",
+    });
     this.belongsToMany(models.Product, {
       as: "items",
       through: models.OrderProduct,
-      foreignKey: "orderId",
-      otherKey: "productId",
+      foreignKey: "order_id",
+      otherKey: "product_id",
     });
   }
   static config(sequelize) {
