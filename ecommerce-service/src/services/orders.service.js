@@ -2,6 +2,7 @@ import { Order } from "../models/Orders.js";
 import { OrderProduct } from "../models/order-product.js";
 import { Product } from "../models/Product.js";
 import sequelize from "../database/db.js";
+import fetch from "node-fetch";
 
 const createOrder = async (req, res) => {
   try {
@@ -71,7 +72,43 @@ const changeOrderStatus = async (req, res) => {
       { order_status: status },
       { where: { id: orderId, seller_id: sellerId } }
     );
+    if (status === "DISPATCHED") {
+      const order = await Order.findByPk(orderId, {
+        include: ["items", "sellerUser", "customerUser"],
+      });
+      const deliveryContract = {
+        foreign_order_id: order.id,
+        products: order.items.map((el) => {
+          return {
+            sku: el.sku,
+            name: el.name,
+            amount: el.OrderProduct.amount,
+          };
+        }),
+        origin_address: order.sellerUser.address,
+        destination: {
+          name: order.customerUser.name,
+          address: order.customerUser.address,
+        },
+      };
+      const response = await fetch(
+        "http://delivery-service:3000/api/v1.0/deliverys/create-delivery",
+        {
+          method: "POST",
+          body: JSON.stringify(deliveryContract),
+          headers: {
+            Accept: "application/json",
+            "Content-type": "application/json",
+          },
+        }
+      ).then((res) => res.json());
+
+      res.json(response);
+    } else {
+      return res.json({ message: `Order ${orderId} was updated` });
+    }
   } catch (e) {
+    console.log(e);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -141,8 +178,22 @@ const updateOrderStatus = async (req, res) => {
     const { orderId, status } = req.query;
 
     await Order.update({ order_status: status }, { where: { id: orderId } });
-
-    res.json({ message: `Order ${orderId} was updated` });
+    if (status === "DISPATCHED") {
+      const order = Order.findByPk(orderId, { include: ["items"] });
+      const deliveryContract = {
+        foreign_order_id: order.id,
+        products: [],
+        origin_address: "Juan",
+        destination: {
+          name: "Juanse",
+          address: "calle 46",
+        },
+      };
+      console.log(order);
+      console.log(deliveryContract);
+    } else {
+      return res.json({ message: `Order ${orderId} was updated` });
+    }
   } catch (e) {
     res.status(500).json({ message: "Internal Server Error" });
   }
@@ -163,6 +214,14 @@ const checkOrderStatus = async (req, res) => {
   }
 };
 
+const receiveNotifications = async (req, res) => {
+  try {
+    console.log(req.body);
+  } catch (e) {
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 export {
   createOrder,
   listMyOrders,
@@ -173,4 +232,5 @@ export {
   getAllOrders,
   updateOrderStatus,
   checkOrderStatus,
+  receiveNotifications,
 };

@@ -1,27 +1,18 @@
 version: "3.8"
 
 services:
-  ecommerce-service:
-    build: ./ecommerce-service
-    image: ecommerce-service
-    depends_on:
-      - mysql
+  mongoDB:
+    image: mongo:latest
     environment:
-      PORT: "3000"
-      DB_USERNAME: "juanse"
-      DB_PASSWORD: "admin"
-      DB_DATABASE: "ecommerceDB"
-      DB_HOST: "ecommerceDB"
-      CSR_NUMBER: "10"
-      SECRETKEY: "85GplflN9lICjxnuDXOM"
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE: deliveryDB
     ports:
-      - "3000:3000"
+      - "27018:27017"
     volumes:
-      - ./ecommerce-service/:/usr/src
-      - ./ecommerce-service/node_modules:/usr/src/node_modules
-    container_name: "ecommerce-service"
+      - ./delivery-service/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     restart: always
-    command: npx nodemon --legacy-watch main.js
+    container_name: deliveryDB
 
   mysql:
     image: mysql:5
@@ -52,7 +43,7 @@ services:
     build: ./delivery-service
     image: delivery-service
     depends_on:
-      - mysql
+      - mongoDB
     environment:
       PORT: "3000"
       DB_URL: "mongodb://admin:admin@deliveryDB:27017/deliveryDB"
@@ -65,15 +56,24 @@ services:
     restart: always
     command: npx nodemon --legacy-watch main.js
 
-  mongoDB:
-    image: mongo:latest
+  ecommerce-service:
+    build: ./ecommerce-service
+    image: ecommerce-service
+    depends_on:
+      - mysql
     environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: admin
-      MONGO_INITDB_DATABASE: deliveryDB
+      PORT: "3000"
+      DB_USERNAME: "juanse"
+      DB_PASSWORD: "admin"
+      DB_DATABASE: "ecommerceDB"
+      DB_HOST: "ecommerceDB"
+      CSR_NUMBER: "10"
+      SECRETKEY: "85GplflN9lICjxnuDXOM"
     ports:
-      - "27018:27017"
+      - "3000:3000"
     volumes:
-      - ./delivery-service/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ./ecommerce-service/:/usr/src
+      - ./ecommerce-service/node_modules:/usr/src/node_modules
+    container_name: "ecommerce-service"
     restart: always
-    container_name: deliveryDB
+    command: npx nodemon --legacy-watch main.js

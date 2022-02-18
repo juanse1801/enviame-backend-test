@@ -14,6 +14,7 @@ import {
   getAnyOrder,
   getOrder,
   listMyOrders,
+  receiveNotifications,
   updateOrderStatus,
   userCancelOrder,
 } from "../services/orders.service.js";
@@ -44,5 +45,7 @@ router.post("/create-order", [verifyToken, verifyStock], createOrder);
 router.get("/check-order-status", verifyToken, checkOrderStatus);
 
 router.put("/user-cancel-order", verifyToken, userCancelOrder);
+
+router.post("/receive-notifications", receiveNotifications);
 
 export default router;
