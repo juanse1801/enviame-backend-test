@@ -6,6 +6,7 @@ import morgan from "morgan";
 import cron from "node-cron";
 import dbConnection from "./src/database/db.js";
 import routesConfig from "./src/routes/index.js";
+import statusChange from "./src/services/schedule.service.js";
 dotenv.config();
 
 // INITIALIZE SERVER
@@ -13,10 +14,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 //SCHEDULE TASK
-
-cron.schedule("*/30 * * * * *", () => {
-  console.log("NODE CRON");
-});
+statusChange();
 
 // MIDDLEWARES
 app.use(express.json());

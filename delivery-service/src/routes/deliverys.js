@@ -1,13 +1,17 @@
 import express from "express";
 
+import {
+  createDelivery,
+  deleteDelivery,
+  getDelivery,
+} from "../services/delivery.service.js";
+
 const router = express.Router();
 
-router.get("/get-delivery");
+router.get("/get-delivery", getDelivery);
 
-router.post("/create-delivery");
+router.post("/create-delivery", createDelivery);
 
-router.put("/change-delivery-status");
-
-router.delete("/delete-delivery");
+router.delete("/delete-delivery", deleteDelivery);
 
 export default router;
