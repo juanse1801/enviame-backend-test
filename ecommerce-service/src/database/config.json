@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "juanse",
+    "password": "admin",
+    "database": "database_development",
+    "host": "ecommerceDB",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "juanse",
+    "password": "admin",
+    "database": "database_development",
+    "host": "ecommerceDB",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "juanse",
+    "password": "admin",
+    "database": "database_development",
+    "host": "ecommerceDB",
+    "dialect": "mysql"
+  }
+}
