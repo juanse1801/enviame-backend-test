@@ -4,6 +4,8 @@ import helmet from "helmet";
 import cors from "cors";
 import morgan from "morgan";
 import cron from "node-cron";
+import dbConnection from "./src/database/db.js";
+import routesConfig from "./src/routes/index.js";
 dotenv.config();
 
 // INITIALIZE SERVER
@@ -17,7 +19,6 @@ cron.schedule("*/30 * * * * *", () => {
 });
 
 // MIDDLEWARES
-
 app.use(express.json());
 app.use(helmet());
 app.use(morgan("dev"));
@@ -37,8 +38,10 @@ app.use(
 );
 
 //RUTAS
+routesConfig(app);
 
 // CONEXION A LA BASE DE DATOS
+await dbConnection();
 
 app.listen(PORT, () => {
   console.log(`Escuchando en el puerto ${PORT}`);

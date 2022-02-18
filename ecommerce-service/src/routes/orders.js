@@ -1,4 +1,4 @@
-import express, { Router } from "express";
+import express from "express";
 
 //MIDDLEWARES
 import verifyToken from "../middlewares/verify-token.js";
